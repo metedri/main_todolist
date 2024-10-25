@@ -1,12 +1,22 @@
-import { ChangeEvent } from "react"
+import { ChangeEvent, useState } from "react"
 import { FilterValues, TaskType } from "../../App"
 import { AddItemForm } from "./AddItemForm"
 import { EditableSpan } from "./EditableSpan"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import DeleteIcon from '@mui/icons-material/Delete';
+import Checkbox from "@mui/material/Checkbox"
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Box from "@mui/material/Box"
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { flexContainerSx, getListItemSx } from "../Todolist.styles"
 
 type Props = {
     title: string
     tasks: TaskType[]
     listID: string
+    filter: FilterValues
     removeTask: (id: string, listID: string) => void
     changeFilter: (filter: FilterValues, listID: string) => void
     addTask: (title: string, listID: string) => void
@@ -17,7 +27,9 @@ type Props = {
 }
 
 export const Todolist = (props: Props) => {
-    const { title, tasks, listID, removeTask, addTask, changeTaskTitle, changeTodolistTitle, changeFilter, changeTaskStatus, removeTodolist } = props
+    const { title, tasks, listID, filter, removeTask, addTask, changeTaskTitle, changeTodolistTitle, changeFilter, changeTaskStatus, removeTodolist } = props
+
+    const [collapsed, setCollapsed] = useState(true)
 
     const addTaskHandler = (title: string) => {
         addTask(title, listID)
@@ -29,16 +41,24 @@ export const Todolist = (props: Props) => {
 
     return (
         <div>
-            <div>
-                <h3>
-                    <EditableSpan changeTitle={changeTodolistHandler} value={title}/>
+            <Box sx={flexContainerSx}>
+                <Box sx={flexContainerSx}>
+                    <h3>
+                        <EditableSpan changeTitle={changeTodolistHandler} value={title} />
                     </h3>
-                <button onClick={() => removeTodolist(listID)}>X</button>
-            </div>
-            <AddItemForm addItem={addTaskHandler} />
+                    <IconButton onClick={() => setCollapsed(!collapsed)} disableRipple>
+                        <ExpandMoreIcon />
+                    </IconButton>
+                </Box>
+                <IconButton onClick={() => removeTodolist(listID)} disableRipple>
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
+            {collapsed
+            ? <><AddItemForm addItem={addTaskHandler} />
             {tasks.length === 0
                 ? <div>Задач нет</div>
-                : <ul>
+                : <List >
                     {tasks.map(t => {
                         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
                             changeTaskStatus(t.id, e.currentTarget.checked, listID)
@@ -48,19 +68,26 @@ export const Todolist = (props: Props) => {
                             changeTaskTitle(t.id, title, listID)
                         }
 
-                        return <li key={t.id}>
-                            <input type="checkbox" checked={t.isDone} onChange={changeTaskStatusHandler} />
-                            <EditableSpan changeTitle={changeTaskTitleHandler} value={t.title}/>
-                            <button onClick={() => removeTask(t.id, listID)}>X</button>
-                        </li>
+                        return <ListItem key={t.id} disablePadding
+                            sx={getListItemSx(t.isDone)}>
+                            <div>
+                                <Checkbox checked={t.isDone} onChange={changeTaskStatusHandler} size='small' edge='start' />
+                                <EditableSpan changeTitle={changeTaskTitleHandler} value={t.title} />
+                            </div>
+                            <IconButton onClick={() => removeTask(t.id, listID)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </ListItem>
                     })}
-                </ul>
+                </List>
             }
-            <div>
-                <button onClick={() => changeFilter('all', listID)}>All</button>
-                <button onClick={() => changeFilter('active', listID)}>Active</button>
-                <button onClick={() => changeFilter('completed', listID)}>Completed</button>
-            </div>
+            <Box sx={flexContainerSx}>
+                <Button onClick={() => changeFilter('all', listID)} variant={filter === 'all' ? 'contained' : 'outlined'} size='small' disableElevation>All</Button>
+                <Button onClick={() => changeFilter('active', listID)} variant={filter === 'active' ? 'contained' : 'outlined'} size='small' disableElevation>Active</Button>
+                <Button onClick={() => changeFilter('completed', listID)} variant={filter === 'completed' ? 'contained' : 'outlined'} size='small' disableElevation>Completed</Button>
+            </Box></>
+            : <></>}
+            
         </div>
 
     )

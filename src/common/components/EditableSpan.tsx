@@ -1,3 +1,4 @@
+import TextField from "@mui/material/TextField"
 import { ChangeEvent, useState, KeyboardEvent } from "react"
 
 type Props = {
@@ -13,7 +14,7 @@ export const EditableSpan = ({ value, changeTitle }: Props) => {
         setNewValue(e.currentTarget.value)
     }
 
-    const onBlurHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const onBlurHandler = () => {
         setEditMode(false)
         changeTitle(newValue)
     }
@@ -33,7 +34,8 @@ export const EditableSpan = ({ value, changeTitle }: Props) => {
 
     return (
         editMode
-            ? <input value={newValue} onChange={onChangeHandler} onBlur={onBlurHandler} onKeyDown={onKeyDownHandler} autoFocus />
+            ? <TextField value={newValue} onChange={onChangeHandler} onBlur={onBlurHandler} onKeyDown={onKeyDownHandler} 
+            autoFocus size='small' variant='standard' />
             : <span onDoubleClick={onDoubleClickHandler}>{value}</span>
 
     )
