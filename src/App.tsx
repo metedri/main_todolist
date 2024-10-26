@@ -7,7 +7,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper'
@@ -22,11 +21,11 @@ export type TaskType = {
   isDone: boolean
 }
 
-type TasksStateType = {
+export type TasksStateType = {
   [key: string]: TaskType[]
 }
 
-type TodolistType = {
+export type TodolistType = {
   id: string
   title: string
   filter: FilterValues
@@ -105,22 +104,30 @@ export const App = () => {
   const changeModeHandler = () => {
     setThemeMode(themeMode == 'light' ? 'dark' : 'light')
   }
-  
+
   const theme = createTheme({
     palette: {
       mode: themeMode === 'light' ? 'light' : 'dark',
       primary: {
         main: '#adc0ff',
         dark: '#7289d8',
+        contrastText: '#3b4c86',
       },
     },
+    typography: {
+      fontFamily: [
+        'Nunito',
+        'sans-serif',
+      ].join(','),
+    },
+    
   })
 
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position='static' sx={{mb: '30px'}}>
+      <AppBar position='static' sx={{ mb: '30px' }}>
         <Toolbar>
           <IconButton
             size='large'
@@ -140,7 +147,7 @@ export const App = () => {
         </Toolbar>
       </AppBar>
       <Container fixed>
-        <Grid container sx={{mb: '30px'}}>
+        <Grid container sx={{ mb: '30px', justifyContent: 'center' }}>
           <AddItemForm addItem={addTodolist} />
         </Grid>
         <Grid container spacing={4}>
@@ -157,22 +164,23 @@ export const App = () => {
 
 
             return (
-              <Paper sx={{ p: '0 20px 20px 20px' }}>
-                <Todolist
-                  key={tl.id}
-                  listID={tl.id}
-                  title={tl.title}
-                  tasks={tasksForToDoList}
-                  removeTask={removeTask}
-                  changeFilter={changeFilter}
-                  addTask={addTask}
-                  changeTaskStatus={changeTaskStatus}
-                  removeTodolist={removeTodolist}
-                  changeTaskTitle={changeTaskTitle}
-                  changeTodolistTitle={changeTodolistTitle}
-                  filter={tl.filter}
-                />
-              </Paper>
+              <Grid key={tl.id}>
+                <Paper sx={{ p: '0 20px 20px 20px' }} elevation={6}>
+                  <Todolist
+                    listID={tl.id}
+                    title={tl.title}
+                    tasks={tasksForToDoList}
+                    removeTask={removeTask}
+                    changeFilter={changeFilter}
+                    addTask={addTask}
+                    changeTaskStatus={changeTaskStatus}
+                    removeTodolist={removeTodolist}
+                    changeTaskTitle={changeTaskTitle}
+                    changeTodolistTitle={changeTodolistTitle}
+                    filter={tl.filter}
+                  />
+                </Paper>
+              </Grid>
             )
           })}
         </Grid>

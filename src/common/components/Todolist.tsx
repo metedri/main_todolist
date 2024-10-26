@@ -10,6 +10,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Box from "@mui/material/Box"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { flexContainerSx, getListItemSx } from "../Todolist.styles"
 
 type Props = {
@@ -47,7 +48,7 @@ export const Todolist = (props: Props) => {
                         <EditableSpan changeTitle={changeTodolistHandler} value={title} />
                     </h3>
                     <IconButton onClick={() => setCollapsed(!collapsed)} disableRipple>
-                        <ExpandMoreIcon />
+                        {collapsed? <ExpandLessIcon/> : <ExpandMoreIcon />}
                     </IconButton>
                 </Box>
                 <IconButton onClick={() => removeTodolist(listID)} disableRipple>
@@ -57,7 +58,7 @@ export const Todolist = (props: Props) => {
             {collapsed
             ? <><AddItemForm addItem={addTaskHandler} />
             {tasks.length === 0
-                ? <div>Задач нет</div>
+                ? <Box sx={{padding: '10px 0'}}>Задач нет</Box>
                 : <List >
                     {tasks.map(t => {
                         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
