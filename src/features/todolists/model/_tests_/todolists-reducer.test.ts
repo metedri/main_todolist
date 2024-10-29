@@ -1,5 +1,4 @@
-import { TodolistType } from '../../App'
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC, todolistsReducer } from '../todolists-reducer'
+import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC, todolistsReducer, TodolistType } from '../todolists-reducer'
 import { v1 } from 'uuid'
 
 let startState: TodolistType[]

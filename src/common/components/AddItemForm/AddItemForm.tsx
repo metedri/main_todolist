@@ -31,8 +31,20 @@ export const AddItemForm = ({ addItem }: Props) => {
 
     return (
         <div>
-            <TextField value={inputValue} onChange={newValueOnChangeHandler} onKeyDown={newValueOnKeyUpHandler} 
-            size='small' label='Enter a title' error={!!error} helperText={error}/>
+            <TextField 
+                value={inputValue} 
+                onChange={newValueOnChangeHandler} 
+                onKeyDown={newValueOnKeyUpHandler} 
+                size='small' 
+                label='Enter a title' 
+                error={!!error} 
+                helperText={error} 
+                sx={{
+                    '& fieldset': {
+                      border: '1px solid #adc0ff', // Цвет границы по умолчанию
+                    },
+                  }}
+            />
             <IconButton onClick={addItemHandler}>
                 <AddBoxIcon color='primary'/>
             </IconButton>

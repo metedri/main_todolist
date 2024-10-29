@@ -24,8 +24,8 @@ export const EditableSpan = ({ value, changeTitle }: Props) => {
     }
 
     const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') { 
-            setNewValue(newValue) 
+        if (e.key === 'Enter') {
+            changeTitle(newValue)
             setEditMode(false)
         }
     };
@@ -34,8 +34,15 @@ export const EditableSpan = ({ value, changeTitle }: Props) => {
 
     return (
         editMode
-            ? <TextField value={newValue} onChange={onChangeHandler} onBlur={onBlurHandler} onKeyDown={onKeyDownHandler} 
-            autoFocus size='small' variant='standard' />
+            ? <TextField
+                value={newValue}
+                onChange={onChangeHandler}
+                onBlur={onBlurHandler}
+                onKeyDown={onKeyDownHandler}
+                autoFocus
+                size='small'
+                variant='standard'
+            />
             : <span onDoubleClick={onDoubleClickHandler}>{value}</span>
 
     )
