@@ -10,31 +10,33 @@ import { useAppDispatch } from "../../../../../../../common/hooks/useAppDispatch
 import { TodolistType } from "../../../../../model/todolists-reducer";
 
 type Props = {
-    todolist: TodolistType
+    listID: string
     task: TaskType
 }
 
 
-export const Task = ({ todolist, task }: Props) => {
+export const Task = ({ listID, task }: Props) => {
     const dispatch = useAppDispatch()
 
-    const removeTask = (id: string, listID: string) => dispatch(removeTaskAC({ id, listID }))
+    const removeTask = () => {
+        dispatch(removeTaskAC({ id: task.id, listID }))
+    }
 
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(changeTaskStatusAC({ id: task.id, status: e.currentTarget.checked, listID: todolist.id }))
+        dispatch(changeTaskStatusAC({ id: task.id, status: e.currentTarget.checked, listID }))
     }
 
     const changeTaskTitle = (title: string) => {
-        dispatch(changeTaskTitleAC({ id: task.id, title, listID: todolist.id }))
+        dispatch(changeTaskTitleAC({ id: task.id, title, listID }))
     }
 
     return (
         <ListItem disablePadding sx={getListItemSx(task.isDone)}>
-            <>
+            <div>
                 <Checkbox checked={task.isDone} onChange={changeTaskStatus} size='small' edge='start' />
                 <EditableSpan changeTitle={changeTaskTitle} value={task.title} />
-            </>
-            <IconButton onClick={() => removeTask(task.id, todolist.id)}>
+            </div>
+            <IconButton onClick={removeTask}>
                 <DeleteIcon />
             </IconButton>
         </ListItem>

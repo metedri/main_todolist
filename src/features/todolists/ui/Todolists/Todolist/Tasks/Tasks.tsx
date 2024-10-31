@@ -3,6 +3,7 @@ import List from '@mui/material/List';
 import { TodolistType } from "../../../../model/todolists-reducer";
 import { useAppSelector } from "../../../../../../common/hooks/useAppSelector";
 import { Task } from "./Task/Task";
+import { selectTasks } from "../../../../model/tasksSelectors";
 
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 }
 
 export const Tasks = ({ todolist }: Props) => {
-    const tasks = useAppSelector(state => state.tasks)
+    const tasks = useAppSelector(selectTasks)
 
     let tasksForToDoList = tasks[todolist.id]
 
@@ -27,7 +28,7 @@ export const Tasks = ({ todolist }: Props) => {
             ? <Box sx={{ padding: '10px 0' }}>Задач нет</Box>
             : <List >
                 {tasksForToDoList.map(task => {
-                    return <Task key={task.id} task={task} todolist={todolist} />
+                    return <Task key={task.id} task={task} listID={todolist.id} />
                 })}
             </List>
         }
