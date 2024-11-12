@@ -7,12 +7,13 @@ import Switch from '@mui/material/Switch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { changeThemeAC } from '../../../app/app-reducer';
-import { MenuButton } from '../MenuButton';
+import { MenuButton } from '../MenuButton/MenuButton';
+import { selectThemeMode } from '../../../app/appSelectors';
 
 
 export const Header = () => {
   const dispatch = useAppDispatch()
-  const themeMode = useAppSelector(state => state.app.themeMode)
+  const themeMode = useAppSelector(selectThemeMode)
 
   const changeModeHandler = () => {
     dispatch(changeThemeAC(themeMode == 'light' ? 'dark' : 'light'))
