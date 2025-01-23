@@ -1,27 +1,44 @@
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid2';
-import { Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useAppDispatch } from '../common/hooks/useAppDispatch';
-import { addTodolistAC, removeAllTodolistAC } from '../features/todolists/model/todolists-reducer';
-import { AddItemForm } from '../common/components/AddItemForm/AddItemForm';
-import { Todolists } from '../features/todolists/ui/Todolists/Todolists';
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid2'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Button } from '@mui/material'
+import { AddItemForm } from '../common/components'
+import { useAppSelector } from '../common/hooks'
+import { useAddTodolistMutation } from '../features/todolists/api/todolistsApi'
+import { Todolists } from '../features/todolists/ui/Todolists/Todolists'
+import { selectIsLoggedIn } from './appSlice'
+import { useNavigate } from 'react-router'
+import { useEffect } from 'react'
+import { Path } from '../common/components/Routing/Routing'
 
 export const Main = () => {
-    const dispatch = useAppDispatch()
+  const [addTodolist] = useAddTodolistMutation()
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
-    const addTodolist = (title: string) => dispatch(addTodolistAC(title)) 
-    const removeAllTodolist = () => dispatch(removeAllTodolistAC()) 
+  const navigate = useNavigate()
 
-    return (
-        <Container fixed>
-            <Grid container spacing={3} sx={{ mb: '30px' }}>
-                <AddItemForm addItem={addTodolist} />
-                <Button onClick={removeAllTodolist} variant='outlined' startIcon={<DeleteIcon />} disableElevation>Remove all</Button>
-            </Grid>
-            <Grid container spacing={4}>
-                <Todolists />
-            </Grid>
-        </Container>
-    )
+  const addTodolistCallback = (title: string) => {
+    addTodolist(title)
+  }
+  const removeAllTodolist = () => alert('нельзя удалить все')
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate(Path.Login)
+    }
+  }, [isLoggedIn])
+
+  return (
+    <Container fixed>
+      <Grid container spacing={3} sx={{ mb: '30px' }}>
+        <AddItemForm addItem={addTodolistCallback} />
+        <Button onClick={removeAllTodolist} variant="outlined" startIcon={<DeleteIcon />} disableElevation>
+          Remove all
+        </Button>
+      </Grid>
+      <Grid container spacing={4}>
+        <Todolists />
+      </Grid>
+    </Container>
+  )
 }
