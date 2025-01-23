@@ -1,7 +1,5 @@
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import { changeTheme, selectAppStatus, selectIsLoggedIn, selectThemeMode, setIsLoggedIn } from '../../../app/appSlice'
@@ -37,15 +35,13 @@ export const Header = () => {
       })
       .then(() => {
         dispatch(baseApi.util.invalidateTags(['Todolist', 'Task']))
+        console.log('invalidateTags')
       })
   }
 
   return (
     <AppBar position="static" sx={{ mb: '30px' }}>
       <Toolbar>
-        {/* <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
-          <MenuIcon />
-        </IconButton> */}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           To Do List
         </Typography>

@@ -3,9 +3,17 @@ import Grid from '@mui/material/Grid2'
 import { Todolist } from './Todolist/Todolist'
 import { useGetTodolistsQuery } from '../../api/todolistsApi'
 import { TodolistSkeleton } from '../skeletons/TodolistSkeleton/TodolistSkeleton'
+import { useAppSelector } from '../../../../common/hooks'
+import { selectIsLoggedIn } from '../../../../app/appSlice'
 
 export const Todolists = () => {
-  const { data: todolists, isLoading } = useGetTodolistsQuery()
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
+
+  const { data: todolists, isLoading } = useGetTodolistsQuery(undefined, { skip: !isLoggedIn })
+
+  if (!isLoggedIn) {
+    return null
+  }
 
   if (isLoading) {
     return (
