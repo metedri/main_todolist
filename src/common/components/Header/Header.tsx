@@ -35,7 +35,6 @@ export const Header = () => {
       })
       .then(() => {
         dispatch(baseApi.util.invalidateTags(['Todolist', 'Task']))
-        console.log('invalidateTags')
       })
   }
 

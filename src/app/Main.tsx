@@ -4,7 +4,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { Button } from '@mui/material'
 import { AddItemForm } from '../common/components'
 import { useAppSelector } from '../common/hooks'
-import { useAddTodolistMutation } from '../features/todolists/api/todolistsApi'
+import {
+  useAddTodolistMutation,
+  useGetTodolistsQuery,
+  useRemoveTodolistMutation,
+} from '../features/todolists/api/todolistsApi'
 import { Todolists } from '../features/todolists/ui/Todolists/Todolists'
 import { selectIsLoggedIn } from './appSlice'
 import { useNavigate } from 'react-router'
@@ -13,14 +17,21 @@ import { Path } from '../common/components/Routing/Routing'
 
 export const Main = () => {
   const [addTodolist] = useAddTodolistMutation()
+  const [removeTodolist] = useRemoveTodolistMutation()
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
+
+  const { data: todolists } = useGetTodolistsQuery(undefined, { skip: !isLoggedIn })
 
   const navigate = useNavigate()
 
   const addTodolistCallback = (title: string) => {
     addTodolist(title)
   }
-  const removeAllTodolist = () => alert('нельзя удалить все')
+  const removeAllTodolist = () => {
+    todolists?.map(tl => {
+      removeTodolist(tl.id)
+    })
+  }
 
   useEffect(() => {
     if (!isLoggedIn) {
