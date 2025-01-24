@@ -41,11 +41,34 @@ export const tasksApi = baseApi.injectEndpoints({
       BaseResponse<{ item: DomainTask }>,
       { todolistId: string; taskId: string; model: UpdateTaskModel }
     >({
-      query: ({ todolistId, taskId, model }) => {
-        return {
-          method: 'PUT',
-          url: `todo-lists/${todolistId}/tasks/${taskId}`,
-          body: model,
+      query: ({ todolistId, taskId, model }) => ({
+        method: 'PUT',
+        url: `todo-lists/${todolistId}/tasks/${taskId}`,
+        body: model,
+      }),
+      async onQueryStarted({ todolistId, taskId, model }, { dispatch, queryFulfilled, getState }) {
+        const cachedArgsForQuery = tasksApi.util.selectCachedArgsForQuery(getState(), 'getTasks')
+
+        let patchResults: any[] = []
+
+        cachedArgsForQuery.forEach(({ args }) => {
+          patchResults.push(
+            dispatch(
+              tasksApi.util.updateQueryData('getTasks', { todolistId, args: { page: args.page } }, state => {
+                const task = state.items.find(t => t.id === taskId)
+                if (task) {
+                  task.status = model.status
+                }
+              })
+            )
+          )
+        })
+        try {
+          await queryFulfilled
+        } catch {
+          patchResults.forEach(patchResult => {
+            patchResult.undo()
+          })
         }
       },
       invalidatesTags: (res, err, { taskId }) => [{ type: 'Task', id: taskId }],
